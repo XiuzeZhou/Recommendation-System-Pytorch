@@ -15,8 +15,8 @@ class ConvNCF(torch.nn.Module):
         self._init_weight_()
         
     def _init_weight_(self):
-        nn.init.normal_(self.embedding_item.weight, mean=0, std=0.1)
-        nn.init.normal_(self.embedding_user.weight, mean=0, std=0.1)
+        nn.init.normal_(self.embedding_item.weight, mean=0, std=1.0)
+        nn.init.normal_(self.embedding_user.weight, mean=0, std=1.0)
     
     '''    
     def outer(self, vec1, vec2):
