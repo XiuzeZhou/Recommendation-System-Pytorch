@@ -10,13 +10,13 @@ class ConvNCF(torch.nn.Module):
         self.embedding_user, self.embedding_item = nn.Embedding(users_num, embedding_size), nn.Embedding(items_num, embedding_size)
         
         self.cnn = CNNnet(input_size=embedding_size, num_kernel=num_kernel)
-        self.linear = nn.Linear(num_kernel, 1)
+        self.linear = nn.Linear(num_kernel, 1, bias=False)
         
         self._init_weight_()
         
     def _init_weight_(self):
-        nn.init.normal_(self.embedding_item.weight, mean=0, std=1.0)
-        nn.init.normal_(self.embedding_user.weight, mean=0, std=1.0)
+        nn.init.normal_(self.embedding_item.weight, mean=0, std=0.01)
+        nn.init.normal_(self.embedding_user.weight, mean=0, std=0.01)
     
     '''    
     def outer(self, vec1, vec2):
@@ -39,7 +39,8 @@ class ConvNCF(torch.nn.Module):
         user_ids, item_ids = x[:,0], x[:,1]
         embed_users, embed_items = self.embedding_user(user_ids), self.embedding_item(item_ids)
         
-        out = self.outer(embed_users, embed_items)
+        # out = self.outer(embed_users, embed_items)
+        out = torch.bmm(embed_users.unsqueeze(2), embed_items.unsqueeze(1))
         out = out.reshape(-1, 1, self.embedding_size, self.embedding_size)
         out = self.cnn(out)
         out = out.reshape(-1, self.num_kernel)
