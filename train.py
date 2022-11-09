@@ -7,9 +7,13 @@ from utils import generate_instances, generate_pairs
 from evaluation import evaluate
 from utils import BPRLoss
 
-
-def train(model, lr, weight_decay, test_ratings, test_negatives, topK, mat, epochs, batch_size, mode, device, Loss='BCE'):    
-    optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=weight_decay)
+def train(model, mat, test_ratings, test_negatives, lr=0.001, weight_decay=1e-8, 
+          batch_size=1024, topK=10, epochs=100, mode='hr', device='cpu', Loss='BCE', optim='Adam'):
+          
+    if optim == 'Adam':
+        optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=weight_decay)
+    elif optim == 'SGD':
+        optimizer = torch.optim.SGD(model.parameters(), lr=lr, weight_decay=weight_decay)
     
     if Loss == 'BCE':
         criterion = nn.BCEWithLogitsLoss()

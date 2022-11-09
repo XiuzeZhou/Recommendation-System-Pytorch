@@ -235,7 +235,7 @@ def get_train_test(rating_mat, num_negative=99):
 
 
 # Genarate instances from train dataset
-def generate_list(train_mat, negative_time=4):
+def generate_list(train_mat, negative_time: int = 4):
     data = []
     num_users,_ = train_mat.shape
     
@@ -253,7 +253,7 @@ def generate_list(train_mat, negative_time=4):
 
 
 # Read train and test data
-def read_data(file_dir):
+def read_data(file_dir: str):
     data=[]
     f = open(file_dir)
     for line in f.readlines():
@@ -267,6 +267,19 @@ def read_data(file_dir):
             data.append([int(u), int(i)])
     
     return data
+    
+
+# get the edge between user and item    
+def get_edge_index(mat: np.asarray):
+    N, M = mat.shape
+    node0, node1 = [],[]
+    for i in range(N):
+        for j in range(M):
+            if mat[i,j] > 0:
+                node0.append(i)
+                node1.append(N+j)
+    edge_index  = torch.tensor([node0, node1], dtype=torch.long)
+    return edge_index
 
 
 

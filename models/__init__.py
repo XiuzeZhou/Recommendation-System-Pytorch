@@ -10,3 +10,5 @@ Data: 7/15 2022
 
 from .NeuMF import NeuMF
 from .ConvNCF import ConvNCF
+from .BPR import BPR
+from .LightGCN import LightGCN
